@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33530.505
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibFreeVPN", "librefreevpn\LibFreeVPN\LibFreeVPN.csproj", "{88281D9E-0041-C5C0-1B65-449B1D5829C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceLib", "v2rayN\v2rayN\ServiceLib\ServiceLib.csproj", "{4804A970-9900-EB99-7FE8-2C09F21707CD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{88281D9E-0041-C5C0-1B65-449B1D5829C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88281D9E-0041-C5C0-1B65-449B1D5829C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88281D9E-0041-C5C0-1B65-449B1D5829C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88281D9E-0041-C5C0-1B65-449B1D5829C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4804A970-9900-EB99-7FE8-2C09F21707CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4804A970-9900-EB99-7FE8-2C09F21707CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4804A970-9900-EB99-7FE8-2C09F21707CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4804A970-9900-EB99-7FE8-2C09F21707CD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5A0891D0-32D7-41C4-AD61-4B770A4C20D6}
+	EndGlobalSection
+EndGlobal
