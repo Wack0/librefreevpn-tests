@@ -241,11 +241,7 @@ namespace LibFreeVPN.Tests
                     return false;
             }
         }
-
-        [TestMethod]
-        [DynamicData(nameof(GetProviders), DynamicDataSourceType.Method)]
-        [DoNotParallelize]
-        public async Task ProviderTestAsync(IVPNProvider provider)
+        private async Task ProviderTestAsyncImpl(IVPNProvider provider)
         {
             var servers = await provider.GetServersAsync();
             Assert.IsNotEmpty(servers, "An empty list of servers was obtained from this provider.");
@@ -260,7 +256,20 @@ namespace LibFreeVPN.Tests
             Assert.IsTrue(oneServerGood, "None of the servers obtained from this provider succeeded a connection test.");
         }
 
-        public static IEnumerable<TestDataRow<IVPNProvider>> GetProviders() => VPNProviders.Providers.Select((p) =>
+        [TestMethod]
+        [DynamicData(nameof(GetProviders), DynamicDataSourceType.Method)]
+        [DoNotParallelize]
+        public Task ProviderTestAsync(IVPNProvider provider) => ProviderTestAsyncImpl(provider);
+
+        [TestMethod]
+        [DynamicData(nameof(GetProvidersAbandoned), DynamicDataSourceType.Method)]
+        [DoNotParallelize]
+        public Task ProviderTestAbandonedAsync(IVPNProvider provider) => ProviderTestAsyncImpl(provider);
+
+        public static IEnumerable<TestDataRow<IVPNProvider>> GetProviders() => GetProvidersImpl(false);
+        public static IEnumerable<TestDataRow<IVPNProvider>> GetProvidersAbandoned() => GetProvidersImpl(true);
+
+        private static IEnumerable<TestDataRow<IVPNProvider>> GetProvidersImpl(bool abandoned) => VPNProviders.Providers.Where((p) => p.PossiblyAbandoned.HasValue == abandoned).Select((p) =>
         {
             string prefix = "";
             if (p.RiskyRequests) prefix = "[Risky] ";
