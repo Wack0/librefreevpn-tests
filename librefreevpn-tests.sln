@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibFreeVPN", "librefreevpn\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceLib", "v2rayN\v2rayN\ServiceLib\ServiceLib.csproj", "{4804A970-9900-EB99-7FE8-2C09F21707CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibFreeVPN.Tests", "LibFreeVPN.Tests\LibFreeVPN.Tests.csproj", "{3AF76B2C-2576-46B2-9555-A23FA8C3D173}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,10 @@ Global
 		{4804A970-9900-EB99-7FE8-2C09F21707CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4804A970-9900-EB99-7FE8-2C09F21707CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4804A970-9900-EB99-7FE8-2C09F21707CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AF76B2C-2576-46B2-9555-A23FA8C3D173}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AF76B2C-2576-46B2-9555-A23FA8C3D173}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AF76B2C-2576-46B2-9555-A23FA8C3D173}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AF76B2C-2576-46B2-9555-A23FA8C3D173}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

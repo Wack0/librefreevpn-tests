@@ -1,6 +1,7 @@
 [submodule "librefreevpn"]
 	path = librefreevpn
 	url = https://github.com/Wack0/librefreevpn
+        branch = main
 [submodule "v2rayN"]
 	path = v2rayN
 	url = https://github.com/2dust/v2rayN
