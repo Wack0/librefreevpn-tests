@@ -248,6 +248,7 @@ namespace LibFreeVPN.Tests
         }
         private async Task ProviderTestAsyncImpl(IVPNProvider provider)
         {
+            provider.Reset();
             var servers = await provider.GetServersAsync();
             Assert.IsNotEmpty(servers, "An empty list of servers was obtained from this provider.");
             bool oneServerGood = false;
