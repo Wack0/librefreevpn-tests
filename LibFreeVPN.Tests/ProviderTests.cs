@@ -56,7 +56,12 @@ namespace LibFreeVPN.Tests
                 var port = new ForwardedPortLocal("127.0.0.1", (uint)localPort, "example.com", 80);
                 client.AddForwardedPort(port);
                 port.Start();
-                await HttpClient.GetStringAsync(string.Format("http://127.0.0.1:{0}", localPort));
+                using (var request = new HttpRequestMessage(HttpMethod.Get, string.Format("http://127.0.0.1:{0}", localPort)))
+                {
+                    request.Headers.Host = "example.com";
+                    var response = await HttpClient.SendAsync(request);
+                    await response.Content.ReadAsStringAsync();
+                }
             }
             return true;
         }
