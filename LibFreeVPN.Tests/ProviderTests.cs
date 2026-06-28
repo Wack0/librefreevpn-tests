@@ -2,18 +2,15 @@
 using ServiceLib.Common;
 using ServiceLib.Enums;
 using ServiceLib.Handler;
-using ServiceLib.Handler.Fmt;
 using ServiceLib.Manager;
 using ServiceLib.Models;
 using ServiceLib.ViewModels;
 using System;
 using System.IO.Compression;
-using System.Linq.Expressions;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text;
-using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace LibFreeVPN.Tests
 {
@@ -87,7 +84,7 @@ namespace LibFreeVPN.Tests
             }
         }
 
-        private static async ValueTask<bool> RayTestAsync(IVPNServer server)
+        private static async ValueTask<bool> RayOrSocksTestAsync(string url)
         {
             if (RayViewModel == null)
             {
@@ -130,8 +127,6 @@ namespace LibFreeVPN.Tests
                 AppManager.Instance.InitApp();
                 RayViewModel = new MainWindowViewModel(null);
             }
-            // Get the server URL.
-            var url = server.Config;
             // Remove all servers.
             var items = await AppManager.Instance.ProfileItems(string.Empty);
             int ret = 0;
@@ -184,6 +179,61 @@ namespace LibFreeVPN.Tests
             return true;
         }
 
+        private static ValueTask<bool> RayTestAsync(IVPNServer server)
+        {
+            return RayOrSocksTestAsync(server.Config);
+        }
+
+        private static readonly char[] s_CredsSplit = new char[] { ':' };
+
+        private static async ValueTask<bool> ProxyHttpTestAsync(string server)
+        {
+            try
+            {
+                var serverUri = new Uri(server);
+                ICredentials? creds = null;
+                if (!string.IsNullOrEmpty(serverUri.UserInfo))
+                {
+                    var userInfo = serverUri.UserInfo.Split(s_CredsSplit, 2);
+                    if (userInfo.Length == 2) creds = new NetworkCredential(userInfo[0], userInfo[1]);
+                }
+                var handler = new HttpClientHandler()
+                {
+                    Proxy = new WebProxy()
+                    {
+                        Address = new Uri(server),
+                        UseDefaultCredentials = false,
+                        Credentials = creds
+                    }
+                };
+                var client = new HttpClient(handler, true);
+                await client.GetStringAsync("http://example.com");
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static string ProxyGetUriFromConfig(IVPNServer server)
+        {
+            var config = server.Config.Split("\r\n");
+            for (int i = 0; i < config.Length; i++)
+            {
+                if (config[i].StartsWith("http://") || config[i].StartsWith("https://") || config[i].StartsWith("socks://")) return config[i];
+            }
+            return string.Empty;
+        }
+
+        private static ValueTask<bool> ProxyTestAsync(IVPNServer server)
+        {
+            var uri = ProxyGetUriFromConfig(server);
+            if (string.IsNullOrEmpty(uri)) return new ValueTask<bool>(false);
+            if (uri.StartsWith("socks://")) return RayOrSocksTestAsync(uri);
+            return ProxyHttpTestAsync(uri);
+        }
+
         private static async ValueTask<bool> OvpnTestAsync(IVPNServer server)
         {
             if (server.Registry[ServerRegistryKeys.Hostname].EndsWith(".cloudfront.net")) return false;
@@ -208,6 +258,8 @@ namespace LibFreeVPN.Tests
                         return await SshTestAsync(server);
                     case ServerProtocol.V2Ray:
                         return await RayTestAsync(server);
+                    case ServerProtocol.WebProxy:
+                        return await ProxyTestAsync(server);
                     case ServerProtocol.OpenVPN:
                         if (server.Registry[ServerRegistryKeys.Hostname].EndsWith(".cloudfront.net")) return false;
                         return await OvpnTestAsync(server);
@@ -232,6 +284,8 @@ namespace LibFreeVPN.Tests
                 case ServerProtocol.SSH:
                     return true;
                 case ServerProtocol.V2Ray:
+                    return true;
+                case ServerProtocol.WebProxy:
                     return true;
                 case ServerProtocol.OpenVPN:
                     if (server.Registry[ServerRegistryKeys.Hostname].EndsWith(".cloudfront.net")) return true;
